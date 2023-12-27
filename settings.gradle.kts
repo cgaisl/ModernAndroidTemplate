@@ -11,6 +11,7 @@ pluginManagement {
 }
 
 dependencyResolutionManagement {
+    @Suppress("UnstableApiUsage")
     repositories {
         google()
         mavenCentral()
@@ -18,5 +19,4 @@ dependencyResolutionManagement {
     }
 }
 
-include(":composeApp")
-include(":shared")
+include(":android")
