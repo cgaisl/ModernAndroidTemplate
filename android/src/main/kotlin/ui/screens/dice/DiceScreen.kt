@@ -20,7 +20,7 @@ import vibratePhone
 
 @Composable
 fun DiceScreen() {
-    val (state, effects, eventSink) = getRendering { diceScreenPresenter(it) }
+    val (state, effects, eventSink) = getRendering { diceScreenPresenter() }
 
     val vibrateFunction = vibratePhone()
 

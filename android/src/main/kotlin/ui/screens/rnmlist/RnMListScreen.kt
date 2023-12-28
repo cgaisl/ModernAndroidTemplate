@@ -12,9 +12,9 @@ import ui.getRendering
 @Composable
 fun RnMListScreen() {
     val navController = LocalNavController.current
-    val (state, effects, eventSink) = getRendering { rnMScreenPresenter(it) }
+    val (state, effects, eventSink) = getRendering { rnMScreenPresenter() }
 
-    LaunchedEffect(effects) {
+    LaunchedEffect(Unit) {
         effects.collect {
             when (it) {
                 is RnmListScreenEffect.NavigateToDetail -> navController.navigate(Screen.RnMDetail.route(it.characterId))

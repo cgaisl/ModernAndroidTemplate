@@ -11,20 +11,19 @@ import app.cash.molecule.RecompositionMode
 import app.cash.molecule.launchMolecule
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import java.util.*
 
 @Composable
 fun <State, Effect, Event> getRendering(
     key: String? = null,
-    presenter: @Composable (MutableSharedFlow<Effect>) -> Rendering<State, Effect, Event>,
+    presenter: @Composable () -> Rendering<State, Effect, Event>,
 ): Rendering<State, Effect, Event> {
     val vmKey = rememberSaveable { key ?: UUID.randomUUID().toString() }
 
     return viewModel<BaseViewModel<State, Effect, Event>>(
         key = vmKey,
-        factory = ViewModelFactory { presenter(it) }
+        factory = ViewModelFactory { presenter() }
     ).rendering.collectAsState().value
 }
 
@@ -35,7 +34,7 @@ data class Rendering<State, Effect, Event>(
 )
 
 private class ViewModelFactory<State, Effect, Event>(
-    private val presenter: @Composable (MutableSharedFlow<Effect>) -> Rendering<State, Effect, Event>,
+    private val presenter: @Composable () -> Rendering<State, Effect, Event>,
 ) : ViewModelProvider.NewInstanceFactory() {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         @Suppress("UNCHECKED_CAST")
@@ -45,12 +44,11 @@ private class ViewModelFactory<State, Effect, Event>(
 
 
 private class BaseViewModel<State, Effect, Event>(
-    presenter: @Composable (MutableSharedFlow<Effect>) -> Rendering<State, Effect, Event>,
+    presenter: @Composable () -> Rendering<State, Effect, Event>,
 ) : ViewModel() {
     private val scope = CoroutineScope(viewModelScope.coroutineContext + AndroidUiDispatcher.Main)
-    private val effects = MutableSharedFlow<Effect>(extraBufferCapacity = 20)
 
     val rendering: StateFlow<Rendering<State, Effect, Event>> = scope.launchMolecule(RecompositionMode.ContextClock) {
-        presenter(effects)
+        presenter()
     }
 }

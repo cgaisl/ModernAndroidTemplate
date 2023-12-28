@@ -3,6 +3,7 @@ package ui.screens.rnmlist
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.remember
 import data.RickAndMortyRepository
 import data.RnMCharacter
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -23,9 +24,8 @@ sealed interface RnMListScreenEvent {
 
 
 @Composable
-fun rnMScreenPresenter(
-    effects: MutableSharedFlow<RnmListScreenEffect>,
-): Rendering<RnMListScreenState, RnmListScreenEffect, RnMListScreenEvent> {
+fun rnMScreenPresenter(): Rendering<RnMListScreenState, RnmListScreenEffect, RnMListScreenEvent> {
+    val effects = remember { MutableSharedFlow<RnmListScreenEffect>(extraBufferCapacity = 20) }
     val repository = koinInject<RickAndMortyRepository>()
 
     LaunchedEffect(Unit) {

@@ -17,9 +17,8 @@ sealed interface DiceScreenEffect {
 }
 
 @Composable
-fun diceScreenPresenter(
-    effects: MutableSharedFlow<DiceScreenEffect>,
-): Rendering<DiceScreenState, DiceScreenEffect, DiceScreenEvent> {
+fun diceScreenPresenter(): Rendering<DiceScreenState, DiceScreenEffect, DiceScreenEvent> {
+    val effects = remember { MutableSharedFlow<DiceScreenEffect>(extraBufferCapacity = 20) }
     var currentDice by remember { mutableIntStateOf(1) }
 
     return Rendering(
