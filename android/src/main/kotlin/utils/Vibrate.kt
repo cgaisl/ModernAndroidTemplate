@@ -11,8 +11,6 @@ import androidx.compose.ui.platform.LocalContext
 fun vibratePhone(): () -> Unit =
     with(LocalContext.current) {
         {
-            println("Vibrating")
-
             val vib = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 val vibratorManager =
                     getSystemService(Context.VIBRATOR_MANAGER_SERVICE) as VibratorManager
