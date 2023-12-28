@@ -1,17 +1,32 @@
-This is a Kotlin Multiplatform project targeting Android, iOS.
+### Modern Android Development Template
 
-* `/composeApp` is for code that will be shared across your Compose Multiplatform applications.
-  It contains several subfolders:
-  - `commonMain` is for code that’s common for all targets.
-  - Other folders are for Kotlin code that will be compiled for only the platform indicated in the folder name.
-    For example, if you want to use Apple’s CoreCrypto for the iOS part of your Kotlin app,
-    `iosMain` would be the right folder for such calls.
+This repository contains a simple Android app that implements my take on Modern Android development. It should serve as
+a starting point for new projects.
 
-* `/iosApp` contains iOS applications. Even if you’re sharing your UI with Compose Multiplatform, 
-  you need this entry point for your iOS app. This is also where you should add SwiftUI code for your project.
+It is based on an MVI architecture and uses [Cash App's Molecule library](https://github.com/cashapp/molecule) for state
+management. It uses Android ViewModels under the hood. Inspired by [Workflow](https://square.github.io/workflow/), I've
+introduced my own Rendering model, which is a class that holds state, a side effects Flow, and an event sink. I've
+created my own getRendering function that converts the state-managing Composable functions into Renderings immediately
+usable inside my Compose UI without dealing directly with the Android ViewModel.
 
-* `/shared` is for the code that will be shared between all targets in the project.
-  The most important subfolder is `commonMain`. If preferred, you can add code to the platform-specific folders here too.
+## Architecture
 
+The DiceScreen is a simple example that uses all the architecture capabilities. DiceScreen.kt is the State
+Consumer in the illustration below. It listens to the state and side Effects from the State Modifier, our Presenter in
+this case. It renders the UI based on the State, listens to side effects events, and carries them out. The Presenter
+receives events from the UI, modifies the State, and emits side effects.
 
-Learn more about [Kotlin Multiplatform](https://www.jetbrains.com/help/kotlin-multiplatform-dev/get-started.html)…
+![unidirectional_illustration.jpg](unidirectional_illustration.jpg)
+
+One of the main advantages of this architecture is that everything but the State Consumer is platform-agnostic. With
+Kotlin Multiplatform, we can reuse everything else on iOS. Not only the state management logic but also all the other
+layers. The business logic, the network client, the data layer, the repository, the domain models, dependency injection,
+etc. Everything from the State Modifier and below.
+
+All we need to do is re-implement the State Consumer to render the UI and react to side effects, and we can do this in a
+platform-native way.
+
+# Future
+
+In the future, I plan to create another repository to showcase how to reuse the architecture on iOS with SwiftUI and
+Kotlin Multiplatform. This repository, however, will remain Android-only to keep things simple.
