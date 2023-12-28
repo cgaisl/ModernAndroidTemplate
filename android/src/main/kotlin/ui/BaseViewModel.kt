@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.emptyFlow
 import java.util.*
 
 @Composable
@@ -30,7 +31,7 @@ fun <State, Effect, Event> getRendering(
 
 data class Rendering<State, Effect, Event>(
     val state: State,
-    val effects: Flow<Effect>,
+    val effects: Flow<Effect> = emptyFlow(),
     val eventSink: (Event) -> Unit
 )
 
@@ -51,6 +52,7 @@ private class BaseViewModel<State, Effect, Event>(
     private val effects = MutableSharedFlow<Effect>(extraBufferCapacity = 20)
 
     val rendering: StateFlow<Rendering<State, Effect, Event>> = scope.launchMolecule(RecompositionMode.ContextClock) {
+
         presenter(effects)
     }
 }

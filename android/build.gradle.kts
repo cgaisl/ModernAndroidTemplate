@@ -13,8 +13,9 @@ dependencies {
     implementation(libs.compose.material3)
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.viewmodel.compose)
-    implementation(libs.koin.android)
+    implementation(libs.koin.compose)
     implementation(libs.apollo.runtime)
+    implementation(libs.coil.compose)
 
     implementation(libs.compose.ui.tooling.preview.android)
     debugImplementation(libs.compose.ui.tooling)

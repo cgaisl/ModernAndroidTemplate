@@ -6,22 +6,23 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 
 class RickAndMortyRepository {
-    private val _characters = MutableStateFlow(emptyList<Character>())
-    val characters: StateFlow<List<Character>> = _characters
+    private val _characters = MutableStateFlow(emptyList<RnMCharacter>())
+    val characters: StateFlow<List<RnMCharacter>> = _characters
 
     private val apolloClient = ApolloClient.Builder()
         .serverUrl("https://rickandmortyapi.com/graphql")
         .build()
 
 
-    suspend fun queryCharacters() {
+    suspend fun loadCharacters() {
         apolloClient.query(RickAndMortyCharactersQuery()).execute().data?.characters?.results?.let {
             _characters.value = it.mapNotNull { it?.toCharacter() }
         }
     }
 }
 
-fun RickAndMortyCharactersQuery.Result.toCharacter() = Character(
+fun RickAndMortyCharactersQuery.Result.toCharacter() = RnMCharacter(
+    id = id ?: "unknown",
     name = name ?: "unknown",
     image = image ?: "",
     origin = origin?.name ?: "unknown",

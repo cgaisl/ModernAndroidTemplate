@@ -1,6 +1,7 @@
 query RickAndMortyCharacters {
     characters {
         results {
+            id
             name
             image
             origin {

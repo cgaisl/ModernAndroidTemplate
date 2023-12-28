@@ -1,6 +1,8 @@
 package data
 
-data class Character(
+// Rick and Morty Character
+data class RnMCharacter(
+    val id: String,
     val name: String,
     val image: String,
     val origin: String,

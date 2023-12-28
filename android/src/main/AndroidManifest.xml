@@ -4,7 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-            android:name=".TemplateApplication"
             android:supportsRtl="true"
             android:theme="@android:style/Theme.Material.Light.NoActionBar">
         <activity
