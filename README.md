@@ -29,4 +29,4 @@ platform-native way.
 # Future
 
 In the future, I plan to create another repository to showcase how to reuse the architecture on iOS with SwiftUI and
-Kotlin Multiplatform. This repository, however, will remain Android-only to keep things simple.
+Kotlin Multiplatform. The current repository, however, will remain Android-only to keep things simple.
