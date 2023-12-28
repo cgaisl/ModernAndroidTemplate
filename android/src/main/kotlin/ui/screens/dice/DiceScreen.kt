@@ -1,4 +1,4 @@
-package screens.dice
+package ui.screens.dice
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -12,19 +12,20 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import at.cgaisl.template.R
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import ui.getRendering
 import vibratePhone
 
 @Composable
 fun DiceScreen() {
-    val viewModel = viewModel<DiceScreenViewModel>()
-    val state by viewModel.state.collectAsState()
+    val (state, effects, eventSink) = getRendering { diceScreenPresenter(it) }
+
     val vibrateFunction = vibratePhone()
 
     LaunchedEffect(Unit) {
-        viewModel.effects.collect { effect ->
+        effects.collect { effect ->
             when (effect) {
                 is DiceScreenEffect.DiceRolled -> {
                     vibrateFunction()
@@ -35,19 +36,20 @@ fun DiceScreen() {
 
     DiceScreeContent(
         state = state,
-        onEvent = viewModel::onEvent,
+        eventSink = eventSink,
     )
 }
 
 @Composable
 fun DiceScreeContent(
     state: DiceScreenState,
-    onEvent: (DiceScreenEvent) -> Unit,
+    eventSink: (DiceScreenEvent) -> Unit
 ) {
-    var targetRotation by remember { mutableStateOf(0f) }
-    val rotation by animateFloatAsState(targetRotation)
+    val coroutineScope = rememberCoroutineScope()
+    var targetRotation by remember { mutableFloatStateOf(0f) }
+    val rotation by animateFloatAsState(targetRotation, label = "rotation")
 
-    LaunchedEffect(state.currentDice) {
+    suspend fun rollDiceAnimation() {
         targetRotation = -30f
         delay(100)
         targetRotation = 20f
@@ -81,19 +83,21 @@ fun DiceScreeContent(
         Spacer(modifier = Modifier.height(56.dp))
 
         ElevatedButton(
-            onClick = { onEvent(DiceScreenEvent.RollDicePressed) },
+            onClick = {
+                eventSink(DiceScreenEvent.RollDicePressed)
+                coroutineScope.launch { rollDiceAnimation() }
+            },
         ) {
             Text("Roll Dice")
         }
     }
-
 }
 
 @Preview
 @Composable
 fun DiceScreenContentPreview() {
     DiceScreeContent(
-        state = DiceScreenState(1),
-        onEvent = {},
+        state = DiceScreenState(currentDice = 1),
+        eventSink = {},
     )
 }

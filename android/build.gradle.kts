@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.molecule)
+    alias(libs.plugins.apolloPlugin)
 }
 
 kotlin {
@@ -13,17 +14,18 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.viewmodel.compose)
     implementation(libs.koin.android)
+    implementation(libs.apollo.runtime)
 
     implementation(libs.compose.ui.tooling.preview.android)
     debugImplementation(libs.compose.ui.tooling)
 }
 
 android {
-    namespace = "at.cgaisl.template"
+    namespace = libs.versions.android.packageName.get()
     compileSdk = libs.versions.android.compileSdk.get().toInt()
 
     defaultConfig {
-        applicationId = "at.cgaisl.template"
+        applicationId = libs.versions.android.packageName.get()
         minSdk = libs.versions.android.minSdk.get().toInt()
         targetSdk = libs.versions.android.targetSdk.get().toInt()
         versionCode = 1
@@ -44,6 +46,12 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
+    }
+}
+
+apollo {
+    service("RickAndMorty") {
+        packageName.set(libs.versions.android.packageName.get())
     }
 }
 
