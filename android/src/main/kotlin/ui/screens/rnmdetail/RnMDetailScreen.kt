@@ -14,7 +14,7 @@ import ui.getRendering
 
 @Composable
 fun RnMDetailScreen(characterId: String) {
-    val (state, _, _) = getRendering { rnMDetailPresenter(characterId) }
+    val (state, _, _) = getRendering { rnMDetailScreenPresenter(characterId) }
 
     RnMDetailScreenContent(
         state = state,
@@ -23,7 +23,7 @@ fun RnMDetailScreen(characterId: String) {
 
 @Composable
 fun RnMDetailScreenContent(
-    state: RnMDetailState,
+    state: RnMDetailScreenState,
 ) {
     Column(
         modifier = Modifier.fillMaxSize().padding(16.dp),
@@ -62,7 +62,7 @@ fun RnMDetailScreenContent(
 @Composable
 fun RnMDetailScreenContentPreview() {
     RnMDetailScreenContent(
-        RnMDetailState(
+        RnMDetailScreenState(
             character = RnMCharacter(
                 "1",
                 "Rick Sanchez",

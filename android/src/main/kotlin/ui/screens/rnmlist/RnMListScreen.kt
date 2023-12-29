@@ -12,7 +12,7 @@ import ui.getRendering
 @Composable
 fun RnMListScreen() {
     val navController = LocalNavController.current
-    val (state, effects, eventSink) = getRendering { rnMScreenPresenter() }
+    val (state, effects, eventSink) = getRendering { rnMListScreenPresenter() }
 
     LaunchedEffect(Unit) {
         effects.collect {

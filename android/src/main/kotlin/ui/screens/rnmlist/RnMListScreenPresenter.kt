@@ -24,7 +24,7 @@ sealed interface RnMListScreenEvent {
 
 
 @Composable
-fun rnMScreenPresenter(): Rendering<RnMListScreenState, RnmListScreenEffect, RnMListScreenEvent> {
+fun rnMListScreenPresenter(): Rendering<RnMListScreenState, RnmListScreenEffect, RnMListScreenEvent> {
     val effects = remember { MutableSharedFlow<RnmListScreenEffect>(extraBufferCapacity = 20) }
     val repository = koinInject<RickAndMortyRepository>()
 

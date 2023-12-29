@@ -20,6 +20,12 @@ dependencies {
 
     implementation(libs.compose.ui.tooling.preview.android)
     debugImplementation(libs.compose.ui.tooling)
+
+    testImplementation(libs.kotlin.test)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.turbine)
+    testImplementation(libs.koin.test)
+    testImplementation(libs.mockk)
 }
 
 android {
@@ -48,6 +54,10 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.7"
+    }
+    @Suppress("UnstableApiUsage")
+    testOptions {
+        unitTests.isReturnDefaultValues = true
     }
 }
 

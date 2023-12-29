@@ -8,20 +8,20 @@ import kotlinx.coroutines.flow.emptyFlow
 import org.koin.compose.koinInject
 import ui.Rendering
 
-data class RnMDetailState(
+data class RnMDetailScreenState(
     val character: RnMCharacter
 )
 
 @Composable
-fun rnMDetailPresenter(
+fun rnMDetailScreenPresenter(
     characterId: String,
-): Rendering<RnMDetailState, Unit, Unit> {
+): Rendering<RnMDetailScreenState, Unit, Unit> {
     val repository = koinInject<RickAndMortyRepository>()
 
     val character = repository.characters.collectAsState().value.first { it.id == characterId }
 
     return Rendering(
-        state = RnMDetailState(character),
+        state = RnMDetailScreenState(character),
         effects = emptyFlow()
     ) { }
 }
