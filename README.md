@@ -18,6 +18,9 @@ receives events from the UI, modifies the State, and emits side effects.
 
 ![unidirectional_illustration.jpg](unidirectional_illustration.jpg)
 
+Unit testing our State Modifiers is straightforward and UI testing can be done with Maestro nowadays. There is a Maestro
+flow.yaml in the android module.
+
 One of the main advantages of this architecture is that everything but the State Consumer is platform-agnostic. With
 Kotlin Multiplatform, we can reuse everything else on iOS. Not only the state management logic but also all the other
 layers. The business logic, the network client, the data layer, the repository, the domain models, dependency injection,

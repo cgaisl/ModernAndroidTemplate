@@ -25,7 +25,7 @@ class DiceScreenPresenterTest {
                 assertEquals(DiceScreenEffect.DiceRolled, awaitItem())
             }
 
-            assert(awaitState().currentDice in 1..6)
+            assert(awaitItem().state.currentDice in 1..6)
         }
     }
 }

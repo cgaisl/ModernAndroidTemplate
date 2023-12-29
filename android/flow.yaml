@@ -1,0 +1,7 @@
+appId: "at.cgaisl.template"
+---
+- launchApp
+- tapOn: "Roll Dice"
+- tapOn: "List"
+- tapOn: "Rick Sanchez"
+- assertVisible: "Rick Sanchez"
