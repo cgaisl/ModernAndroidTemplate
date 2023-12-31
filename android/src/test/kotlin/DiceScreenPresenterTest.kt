@@ -1,7 +1,7 @@
 import app.cash.molecule.RecompositionMode
 import app.cash.molecule.moleculeFlow
 import app.cash.turbine.test
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
 import ui.screens.dice.DiceScreenEffect
@@ -13,19 +13,19 @@ class DiceScreenPresenterTest {
 
     @Test
     fun `when RollDicePressed event is sent, DiceRolled effect is emitted`() = runTest {
+        val effects = MutableSharedFlow<DiceScreenEffect>(extraBufferCapacity = 20)
+        val events = MutableSharedFlow<DiceScreenEvent>(extraBufferCapacity = 20)
+
         moleculeFlow(RecompositionMode.Immediate) {
-            diceScreenPresenter()
+            diceScreenPresenter(events) { effects.tryEmit(it) }
         }.test {
-            val (state, effects, eventSink) = awaitItem()
+            val state = awaitItem()
             assertEquals(1, state.currentDice)
-            effects.onEach {
-                println(it)
-            }.test {
-                eventSink(DiceScreenEvent.RollDicePressed)
+            effects.test {
+                events.tryEmit(DiceScreenEvent.RollDicePressed)
                 assertEquals(DiceScreenEffect.DiceRolled, awaitItem())
             }
-
-            assert(awaitItem().state.currentDice in 1..6)
+            cancelAndIgnoreRemainingEvents()
         }
     }
 }

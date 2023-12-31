@@ -6,13 +6,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.lifecycle.viewmodel.compose.viewModel
 import ui.components.RnMListItem
-import ui.getRendering
+import ui.rendering
 
 @Composable
 fun RnMListScreen() {
     val navController = LocalNavController.current
-    val (state, effects, eventSink) = getRendering { rnMListScreenPresenter() }
+    val (state, effects, eventSink) = viewModel<RnMListScreenViewModel>().rendering()
 
     LaunchedEffect(Unit) {
         effects.collect {
