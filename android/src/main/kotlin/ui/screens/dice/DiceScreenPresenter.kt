@@ -1,8 +1,9 @@
 package ui.screens.dice
 
 import androidx.compose.runtime.*
-import kotlinx.coroutines.flow.Flow
-import ui.BaseMoleculeViewModel
+import androidx.compose.runtime.saveable.rememberSaveable
+import kotlinx.coroutines.flow.MutableSharedFlow
+import ui.Rendering
 
 data class DiceScreenState(
     val currentDice: Int,
@@ -16,29 +17,27 @@ sealed interface DiceScreenEffect {
     data object DiceRolled : DiceScreenEffect
 }
 
-class DiceScreenViewModel :
-    BaseMoleculeViewModel<DiceScreenState, DiceScreenEffect, DiceScreenEvent>() {
-    @Composable
-    override fun renderState(): DiceScreenState = diceScreenPresenter(events) { _effects.tryEmit(it) }
-}
-
 @Composable
 fun diceScreenPresenter(
-    events: Flow<DiceScreenEvent>,
-    effects: (DiceScreenEffect) -> Unit,
-): DiceScreenState {
-    var currentDice by remember { mutableIntStateOf(1) }
+): Rendering<DiceScreenState, DiceScreenEffect, DiceScreenEvent> {
+    val events = remember { MutableSharedFlow<DiceScreenEvent>(extraBufferCapacity = 20) }
+    val effects = remember { MutableSharedFlow<DiceScreenEffect>(extraBufferCapacity = 20) }
+    var currentDice by rememberSaveable { mutableIntStateOf(1) }
 
     LaunchedEffect(Unit) {
         events.collect { event ->
             when (event) {
                 is DiceScreenEvent.RollDicePressed -> {
                     currentDice = (1..6).random()
-                    effects(DiceScreenEffect.DiceRolled)
+                    effects.tryEmit(DiceScreenEffect.DiceRolled)
                 }
             }
         }
     }
 
-    return DiceScreenState(currentDice)
+    return Rendering(
+        state = DiceScreenState(currentDice),
+        effects = effects,
+        eventSink = { events.tryEmit(it) }
+    )
 }

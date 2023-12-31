@@ -4,12 +4,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import data.RickAndMortyRepository
 import data.RnMCharacter
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import org.koin.compose.koinInject
-import ui.BaseMoleculeViewModel
+import ui.Rendering
 
 data class RnMListScreenState(
     val characters: List<RnMCharacter>
@@ -23,18 +22,10 @@ sealed interface RnMListScreenEvent {
     data class CharacterClicked(val character: RnMCharacter) : RnMListScreenEvent
 }
 
-class RnMListScreenViewModel : BaseMoleculeViewModel<RnMListScreenState, RnmListScreenEffect, RnMListScreenEvent>() {
-    @Composable
-    override fun renderState(): RnMListScreenState {
-        return rnMListScreenPresenter(events) { _effects.tryEmit(it) }
-    }
-}
-
 @Composable
-fun rnMListScreenPresenter(
-    events: Flow<RnMListScreenEvent>,
-    effectSink: (RnmListScreenEffect) -> Unit
-): RnMListScreenState {
+fun rnMListScreenPresenter(): Rendering<RnMListScreenState, RnmListScreenEffect, RnMListScreenEvent> {
+    val events = remember { MutableSharedFlow<RnMListScreenEvent>(extraBufferCapacity = 20) }
+    val effects = remember { MutableSharedFlow<RnmListScreenEffect>(extraBufferCapacity = 20) }
     val repository = koinInject<RickAndMortyRepository>()
 
     LaunchedEffect(Unit) {
@@ -42,11 +33,15 @@ fun rnMListScreenPresenter(
         events.collect { event ->
             when (event) {
                 is RnMListScreenEvent.CharacterClicked -> {
-                    effectSink(RnmListScreenEffect.NavigateToDetail(event.character.id))
+                    effects.tryEmit(RnmListScreenEffect.NavigateToDetail(event.character.id))
                 }
             }
         }
     }
 
-    return RnMListScreenState(repository.characters.collectAsState().value)
+    return Rendering(
+        state = RnMListScreenState(repository.characters.collectAsState().value),
+        effects = effects,
+        eventSink = { events.tryEmit(it) }
+    )
 }

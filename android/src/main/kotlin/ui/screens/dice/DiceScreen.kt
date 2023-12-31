@@ -12,16 +12,14 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import at.cgaisl.template.R
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import ui.rendering
 import vibratePhone
 
 @Composable
 fun DiceScreen() {
-    val (state, effects, eventSink) = viewModel<DiceScreenViewModel>().rendering()
+    val (state, effects, eventSink) = diceScreenPresenter()
 
     val vibrateFunction = vibratePhone()
 

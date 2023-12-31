@@ -1,33 +1,22 @@
 package ui.screens.rnmdetail
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import data.RickAndMortyRepository
 import data.RnMCharacter
-import kotlinx.coroutines.flow.StateFlow
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import ui.BaseViewModel
-import utils.mapState
+import org.koin.compose.koinInject
 
 data class RnMDetailScreenState(
     val character: RnMCharacter
 )
 
-class RnMDetailScreenViewModelFactory(
-    private val characterId: String,
-) : ViewModelProvider.NewInstanceFactory() {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        @Suppress("UNCHECKED_CAST")
-        return RnMDetailScreenViewModel(characterId) as T
-    }
-}
+@Composable
+fun rnMDetailScreenPresenter(
+    characterId: String,
+): RnMDetailScreenState {
+    val repository = koinInject<RickAndMortyRepository>()
 
-class RnMDetailScreenViewModel(private val characterId: String) :
-    BaseViewModel<RnMDetailScreenState, Unit, Unit>(), KoinComponent {
-    private val repository by inject<RickAndMortyRepository>()
+    val character = repository.characters.collectAsState().value.first { it.id == characterId }
 
-    override val state: StateFlow<RnMDetailScreenState> = repository.characters.mapState {
-        RnMDetailScreenState(it.first { it.id == characterId })
-    }
+    return RnMDetailScreenState(character)
 }
