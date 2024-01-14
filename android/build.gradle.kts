@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     alias(libs.plugins.molecule)
     alias(libs.plugins.apolloPlugin)
+    alias(libs.plugins.sqlDelight)
 }
 
 kotlin {
@@ -17,6 +18,8 @@ dependencies {
     implementation(libs.apollo.runtime)
     implementation(libs.coil.compose)
     implementation(libs.compose.navigation)
+    implementation(libs.sql.delight.coroutines.extensions)
+    implementation(libs.sql.delight.driver.android)
 
     implementation(libs.compose.ui.tooling.preview.android)
     debugImplementation(libs.compose.ui.tooling)
@@ -67,3 +70,10 @@ apollo {
     }
 }
 
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("at.cgaisl.androidtemplate.db")
+        }
+    }
+}

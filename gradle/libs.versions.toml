@@ -19,6 +19,7 @@ navigation = "2.7.6"
 turbine = "1.0.0"
 coroutines-test = "1.7.3"
 mockk = "1.13.8"
+sqlDelight = "2.0.1"
 
 [libraries]
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activityCompose" }
@@ -35,9 +36,12 @@ turbine = { module = "app.cash.turbine:turbine", version.ref = "turbine" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "coroutines-test" }
 mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+sql-delight-driver-android = { module = "app.cash.sqldelight:android-driver", version.ref = "sqlDelight" }
+sql-delight-coroutines-extensions = { module = "app.cash.sqldelight:coroutines-extensions", version.ref = "sqlDelight" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
 kotlinAndroid = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 molecule = { id = "app.cash.molecule", version.ref = "molecule" }
 apolloPlugin = { id = "com.apollographql.apollo3", version.ref = "apollo" }
+sqlDelight = { id = "app.cash.sqldelight", version.ref = "sqlDelight" }

@@ -14,7 +14,7 @@ The DiceScreen is a simple example that uses all the architecture capabilities. 
 Consumer in the illustration below. It listens to the state and side Effects from the State Modifier, our Presenter in
 this case. It renders the UI based on the State, listens to side effects events, and carries them out. The Presenter
 receives events from the UI, modifies the State, and emits side effects.
-
+****
 ![unidirectional_illustration.jpg](unidirectional_illustration.jpg)
 
 Unit testing our State Modifiers (i.e. Presenters) is straightforward and UI testing can be done with Maestro nowadays.
